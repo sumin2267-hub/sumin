@@ -1,43 +1,53 @@
-<!DOCTYPE html>
+<!DOCTYPE htm1>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>시간표와 미디어</title>
+    <title>예시1 - 레이아웃을 div로 나누기</title>
+    <style>
+        *{ box-sizing: border-box; }
+        body {font-family: sans-sans-serif; margin: 0;}
+
+        /*각 div 영역에 배경색을 다르게 줘서 눈으로 확인 */
+        .header { background: #4a9e2; color: white; padding: 20px; text-align: center; }
+        .nav    {background: #333; padding: 10px; }
+        .nav a  {color: white; margin: 0 15px; text-decoration: none;}
+        .container { display: flex; }
+        .main   {background: #f4f4f4; padding: 20px; flex: 3; }
+        .sideber{background: #dcdcdc; padding: 20px; flex: 1; }
+        .footer {background: #333; color: white; text-align: center; padding: 10px }
+    </style>
 </head>
 <body>
 
-    <h1>나의 시간표</h1>
+    <!--1. 헤더영역-->
+    <div class="header">
+        <h1>내 웹사이트</h1>
+    </div>
 
-    <table border="1">
-        <tr>
-            <th>교시</th>
-            <th>월</th>
-            <th>화</th>
-            <th>수</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>국어</td>
-            <td>수학</td>
-            <td>영어</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>정보</td>
-            <td>과학</td>
-            <td>체육</td>
-        </tr>
-    </table>
+    <!--2. 네비게이션 영역-->
+    <div class="nav">
+        <a href="#">연락처</a>
+    </div>
 
-    <h1>동영상</h1>
+    <!--3. 본문 + 사이드바를 감싸는 큰 div -->
+    <div class="container">
 
-    <video src="sample.mp4" width="400" controls>
-    </video>
+        <!--3-1.본문 영역-->
+        <div class="main">
+            <d2>본문 내용</d2>
+            <p>공지, 광고, 링크 목록 등</p>
+        <div>
 
-    <h1>소리</h1>
 
-    <audio src="sample.mp3" controls>
-    </audio>
+    </div>
 
+    <!--4. 푸터 영역 -->
+    <div class="footer">
+        <p>%copy; 2026 내 웹사이트</p>
+    </div>
 </body>
-</html>
+</tml>
+            
+
+    
+</body>
