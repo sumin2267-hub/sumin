@@ -18,7 +18,6 @@
       --accent-yellow: #FFE17D;
       --accent-red: #FF7675;
       --accent-green: #55E6C1;
-      --accent-purple: #D6A2E8;
       --bg-main: #F4F6FB;
       --bg-card: #FFFFFF;
       --text-dark: #2D3436;
@@ -211,7 +210,7 @@
       color: white;
     }
 
-    /* Content Area */
+    /* Main Content */
     main {
       flex: 1;
       display: flex;
@@ -230,18 +229,6 @@
       box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
-    }
-
-    .hero-banner::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.15) 10%, transparent 20%);
-      background-size: 20px 20px;
-      pointer-events: none;
     }
 
     .banner-badge {
@@ -326,6 +313,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 1.2rem;
+      width: 100%;
+      min-height: 300px;
     }
 
     /* Hobby Card */
@@ -394,10 +383,6 @@
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       transition: all 0.2s;
-    }
-
-    .like-btn:hover {
-      transform: scale(1.1);
     }
 
     .like-btn.active {
@@ -511,7 +496,6 @@
       color: var(--text-gray);
     }
 
-    /* Empty state */
     .empty-state {
       grid-column: 1 / -1;
       text-align: center;
@@ -525,7 +509,6 @@
       margin-bottom: 1rem;
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
       .app-container {
         flex-direction: column;
@@ -637,7 +620,6 @@
   </div>
 
   <script>
-    // Sample Hobby Data
     const hobbiesData = [
       {
         id: 1,
@@ -734,16 +716,9 @@
     let searchQuery = '';
     let likedItems = new Set();
 
-    // Init
-    document.addEventListener('DOMContentLoaded', () => {
-      renderGrid();
-      setupEventListeners();
-    });
-
     function setupEventListeners() {
-      // Category click
       document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', () => {
           document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           selectedCategory = btn.dataset.category;
@@ -752,7 +727,6 @@
         });
       });
 
-      // Tag click
       document.querySelectorAll('.tag-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const tag = btn.dataset.tag;
@@ -813,21 +787,127 @@
 
     function renderGrid() {
       const grid = document.getElementById('hobbyGrid');
+      if (!grid) return;
+
       const sortBy = document.getElementById('sortSelect').value;
 
-      // Filter
       let filtered = hobbiesData.filter(item => {
-        // Category check
         if (selectedCategory !== 'all' && item.category !== selectedCategory) return false;
         
-        // Tags check (AND logic)
         if (selectedTags.size > 0) {
           for (let tag of selectedTags) {
             if (!item.tags.includes(tag)) return false;
           }
         }
 
-        // Search check
         if (searchQuery) {
           const matchTitle = item.title.toLowerCase().includes(searchQuery);
-          const matchDesc = item.desc.toLowerCase().includes
+          const matchDesc = item.desc.toLowerCase().includes(searchQuery);
+          const matchCat = item.category.toLowerCase().includes(searchQuery);
+          if (!matchTitle && !matchDesc && !matchCat) return false;
+        }
+
+        return true;
+      });
+
+      if (sortBy === 'popular') {
+        filtered.sort((a, b) => (b.likes + (likedItems.has(b.id) ? 1 : 0)) - (a.likes + (likedItems.has(a.id) ? 1 : 0)));
+      } else {
+        filtered.sort((a, b) => b.id - a.id);
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-regular fa-face-meh"></i>
+            <p>조건에 일치하는 취미를 찾지 못했습니다.</p>
+            <p style="font-size:0.85rem; margin-top:0.4rem;">다른 태그나 검색어로 시도해 보세요!</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => {
+        const isLiked = likedItems.has(item.id);
+        const currentLikes = item.likes + (isLiked ? 1 : 0);
+
+        return `
+          <div class="hobby-card" onclick="openModal(${item.id})">
+            <div class="card-img-wrapper">
+              <img src="${item.img}" alt="${item.title}" loading="lazy">
+              <span class="card-badge">${item.category}</span>
+              <button class="like-btn ${isLiked ? 'active' : ''}" onclick="toggleLike(event, ${item.id})">
+                <i class="fa-${isLiked ? 'solid' : 'regular'} fa-heart"></i>
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                ${item.tags.map(t => `<span class="mini-tag">#${t}</span>`).join('')}
+              </div>
+              <h3 class="card-title">${item.title}</h3>
+              <p class="card-desc">${item.desc}</p>
+              <div class="card-footer">
+                <span>난이도: ${item.difficulty}</span>
+                <span><i class="fa-solid fa-heart" style="color:#FF7675;"></i> ${currentLikes}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openModal(id) {
+      const item = hobbiesData.find(h => h.id === id);
+      if (!item) return;
+
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        <img src="${item.img}" style="width:100%; height:200px; object-fit:cover; border-radius:12px; margin-bottom:1rem;">
+        <div style="display:flex; gap:0.4rem; margin-bottom:0.5rem;">
+          ${item.tags.map(t => `<span class="mini-tag">#${t}</span>`).join('')}
+        </div>
+        <h2 style="font-size:1.4rem; font-weight:800; margin-bottom:0.5rem;">${item.title}</h2>
+        <p style="color:var(--text-gray); line-height:1.5; margin-bottom:1.2rem;">${item.desc}</p>
+        
+        <div style="background:var(--bg-main); padding:1rem; border-radius:12px; display:flex; justify-content:space-around; text-align:center; margin-bottom:1.2rem;">
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-light); font-weight:700;">난이도</div>
+            <div style="font-weight:700; color:var(--primary); margin-top:0.2rem;">${item.difficulty}</div>
+          </div>
+          <div style="border-left:1px solid var(--border-color);"></div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-light); font-weight:700;">예상 비용</div>
+            <div style="font-weight:700; color:var(--primary); margin-top:0.2rem;">${item.cost}</div>
+          </div>
+        </div>
+
+        <button onclick="alert('입문 가이드 페이지로 이동합니다!')" style="width:100%; padding:0.8rem; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer;">
+          초보자 입문 가이드 보기
+        </button>
+      `;
+
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal(e) {
+      if (e.target.id === 'modalOverlay') closeModalDirect();
+    }
+
+    function closeModalDirect() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    // 즉시 실행 함수로 리렌더링 보장
+    function init() {
+      setupEventListeners();
+      renderGrid();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
