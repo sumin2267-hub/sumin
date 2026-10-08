@@ -1,53 +1,240 @@
-<!DOCTYPE htm1>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>예시1 - 레이아웃을 div로 나누기</title>
-    <style>
-        *{ box-sizing: border-box; }
-        body {font-family: sans-sans-serif; margin: 0;}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        /*각 div 영역에 배경색을 다르게 줘서 눈으로 확인 */
-        .header { background: #4a90e2; color: white; padding: 20px; text-align: center; }
-        .nav    {background: #333; padding: 10px; }
-        .nav a  {color: white; margin: 0 15px; text-decoration: none;}
-        .container { display: flex; }
-        .main   {background: #f4f4f4; padding: 20px; flex: 3; }
-        .sideber{background: #dcdcdc; padding: 20px; flex: 1; }
-        .footer {background: #333; color: white; text-align: center; padding: 10px }
-    </style>
-</head>
-<body>
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f2f5f9;
+  color: #333;
+}
 
-    <!--1. 헤더영역-->
-    <div class="header">
-        <h1>내 웹사이트 - 수정</h1>
-    </div>
+/* 상단 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
-    <!--2. 네비게이션 영역-->
-    <div class="nav">
-        <a href="#">연락처</a>
-    </div>
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: 1px;
+}
 
-    <!--3. 본문 + 사이드바를 감싸는 큰 div -->
-    <div class="container">
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f1f5f9;
+  border-radius: 25px;
+  padding: 6px 16px;
+  width: 320px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
 
-        <!--3-1.본문 영역-->
-        <div class="main">
-            <d2>본문 내용</d2>
-            <p>공지, 광고, 링크 목록 등</p>
-        <div>
+.search-bar:focus-within {
+  border-color: #3b82f6;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
 
+.search-bar input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+}
 
-    </div>
+.search-bar button {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 15px;
+  margin-left: 8px;
+}
 
-    <!--4. 푸터 영역 -->
-    <div class="footer">
-        <p>&copy; 2026 내 웹사이트</p>
-    </div>
-</body>
-</tml>
-            
+/* 레이아웃 구조 */
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 30px auto;
+  gap: 30px;
+  padding: 0 20px;
+}
 
-    
-</body>
+/* 사이드바 */
+.sidebar {
+  width: 220px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  height: fit-content;
+}
+
+.sidebar-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #475569;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 10px;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: #64748b;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.category-item i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.category-item:hover,
+.category-item.active {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+/* 히어로 배너 */
+.hero-section {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);
+}
+
+.hero-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #78350f;
+}
+
+/* 필터 버튼 영역 */
+.filter-section {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn.purple { background-color: #8b5cf6; }
+.filter-btn.yellow { background-color: #f59e0b; }
+.filter-btn.red    { background-color: #ef4444; }
+.filter-btn.green  { background-color: #10b981; }
+
+/* 인기 취미 섹션 */
+.popular-section {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  text-align: center;
+}
+
+.section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #e0f2fe;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0284c7;
+  margin-bottom: 30px;
+}
+
+.popular-icon {
+  color: #f97316;
+}
+
+/* 취미 카드리스트 */
+.hobby-cards {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: #3b82f6;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.1);
+}
+
+.card-icon {
+  font-size: 32px;
+  color: #3b82f6;
+}
+
+.card-text {
+  font-weight: 600;
+  font-size: 15px;
+  color: #334155;
+}
